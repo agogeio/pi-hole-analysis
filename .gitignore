@@ -1,0 +1,9 @@
+.vscode/
+Include/
+Lib/
+Logs/
+Scripts/
+*.env
+*.cfg
+
+
