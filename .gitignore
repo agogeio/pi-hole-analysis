@@ -3,6 +3,7 @@ agoge/__pycache__/
 Include/
 Lib/
 Logs/
+piparse/__pycache__/
 Scripts/
 *.env
 *.cfg
