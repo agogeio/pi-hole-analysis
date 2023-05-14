@@ -1,4 +1,5 @@
 .vscode/
+agoge/__pycache__/
 Include/
 Lib/
 Logs/
