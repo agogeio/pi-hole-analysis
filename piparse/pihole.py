@@ -1,10 +1,7 @@
 """ PiHole Log Functionality """
+
 import json
-import whois
-
 from piparse import utils
-
-
 
 CONDITIONS = ['local', 'blacklisted', 'blocked', 'error', 'query']
 
@@ -51,43 +48,12 @@ def get_root_domain(url) -> str:
         return url
 
 
-def get_whois(domain_list) -> list:
-    """ Accepts a URL list and returns whois data in form a list of dictionaries"""
-    whois_list = [] 
-    try:
-        with open(domain_list, 'r', encoding='utf-8') as domains:
-            for domain in domains:
-                domain = domain.strip()
-                if not utils.check_is_ip(domain):
-                    try:
-                        whois_info = str(whois.whois(domain))
-                        whois_json = json.loads(whois_info)
-                        whois_list.append(whois_json)
-                        
-                        print(f'{domain} added to whois_data')
-                    except Exception as err:
-                        print(f'Whois error - {err}')
-    except Exception as err:
-        print(err)
-  
-    return whois_list
-
-
 def write_urls_to_log(url_list, log_path) -> None:
     """ Accepts a list of URLs and writes them to a text file """
     #? Remember if you open a file with 'w' it will create the file if it doesn't exist
     with open(log_path, 'w', encoding='utf-8') as url_file:
         for url in url_list:
             url_file.write(url + '\n')
-
-
-def write_whois_to_log(whois_data, log_path) -> None:
-    """ Accepts a list of whois dictionaries and writes them to a JSON file """
-    try:
-        with open(log_path, 'w', encoding='utf-8') as whois_file:
-            json.dump(whois_data, whois_file, indent=4)
-    except Exception as err:
-        print(err)
 
 
 def get_domain_newer_than_year(newer_than_year, whois_file) -> dict:
@@ -149,6 +115,6 @@ if __name__ == '__main__':
             print('No URLs found in PiHole log, or there was an error processing the file')
         else:
             write_urls_to_log(unique_urls, ROOT_DOMAIN_FILE)
-            whois_list = get_whois(ROOT_DOMAIN_FILE)
-            write_whois_to_log(whois_list, WHOIS_FILE)
+            whois_list = utils.get_whois(ROOT_DOMAIN_FILE)
+            utils.write_whois_to_log(whois_list, WHOIS_FILE)
     
