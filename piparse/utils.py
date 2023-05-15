@@ -59,7 +59,6 @@ def get_domain_newer_than_year(whois_file, newer_than_year) -> list:
                     creation_years.append(domain_data)
                     
     return creation_years
-                    
 
 
 def get_whois(domain_list) -> list:
