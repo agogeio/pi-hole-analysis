@@ -12,7 +12,56 @@ def check_is_ip(ip_address) -> bool:
     else:
         return False
 
+
+def get_domain_newer_than_year(whois_file, newer_than_year) -> list:
+    whois_data = whois_file
+    creation_years = []
     
+    try:
+        with open(whois_data, 'r', encoding='utf-8') as whois_file:
+            whois_data = json.load(whois_file)    
+    except Exception as err:
+        print(err)
+    else:
+        for domain in whois_data:
+            
+            try:
+                if not domain['domain_name']:
+                    continue
+                
+                if not domain['creation_date']:
+                    print(f">>> {domain['domain_name']} - with no creation date")
+                    continue
+                
+            except KeyError as err:
+                print(f'Key Error of: {err} for domain: {domain["domain_name"]}')
+                
+            else:
+                if type(domain['domain_name']) == list: 
+                    domain_name = domain['domain_name'][0]
+                elif type(domain['domain_name']) == str:
+                    domain_name = str(domain["domain_name"])
+            
+                if type(domain['creation_date']) == list: 
+                    creation_date = domain['creation_date'][0]
+                else:
+                    creation_date = str(domain["creation_date"])
+
+
+                creation_date_list = creation_date.split(' ')
+                creation_year_month_day = creation_date_list[0]
+                creation_year = creation_year_month_day.split('-')[0]
+              
+                if int(creation_year) > int(newer_than_year):
+                    domain_data = {'domain_name': domain_name,
+                                   'creation_year': creation_year}
+                    # print(f'{domain_data}')
+                    creation_years.append(domain_data)
+                    
+    return creation_years
+                    
+
+
 def get_whois(domain_list) -> list:
     """ Accepts a URL list and returns whois data in form a list of dictionaries"""
     whois_list = [] 
@@ -31,7 +80,7 @@ def get_whois(domain_list) -> list:
                         print(f'Whois error - {err}')
     except Exception as err:
         print(err)
-  
+
     return whois_list
 
 
@@ -42,3 +91,5 @@ def write_whois_to_log(whois_data, log_path) -> None:
             json.dump(whois_data, whois_file, indent=4)
     except Exception as err:
         print(err)
+        
+        

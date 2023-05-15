@@ -1,7 +1,10 @@
+import json
 import os 
-import piparse
-from colorama import Fore
 
+from colorama import Fore
+from piparse import pihole
+from piparse import safebrowsing
+from piparse import utils
 
 if __name__ == '__main__':
     sb_api_key = os.environ.get('safe_browsing')
@@ -11,15 +14,15 @@ if __name__ == '__main__':
     TEST_FILE = 'Logs/test.log'
     WHOIS_FILE = 'Logs/whois.json'
 
-    try:
-        unique_urls = piparse.extract_urls_from_pihole_log(PIHOLE_FILE)
-    except FileNotFoundError as err:
-        print(err)
-    else:
-        if len(unique_urls) == 0:
-            print('No URLs found in PiHole log, or there was an error processing the file')
-        else:
-            piparse.write_urls_to_log(unique_urls, ROOT_DOMAIN_FILE)
+    # try:
+    #     unique_urls = pihole.extract_urls_from_pihole_log(PIHOLE_FILE)
+    # except FileNotFoundError as err:
+    #     print(err)
+    # else:
+    #     if len(unique_urls) == 0:
+    #         print('No URLs found in PiHole log, or there was an error processing the file')
+    #     else:
+    #         pihole.write_urls_to_log(unique_urls, ROOT_DOMAIN_FILE)
             # piparse.whois_list = piparse.get_whois(ROOT_DOMAIN_FILE)
             # piparse.write_whois_to_log(piparse.whois_list, WHOIS_FILE)
     
@@ -30,9 +33,12 @@ if __name__ == '__main__':
     #     print(err)
     # else:
     #     for domain in root_domains:
-    #         result = piparse.get_safe_browsing_report(domain, sb_api_key)
+    #         result = safebrowsing.get_safe_browsing_report(domain, sb_api_key)
             
     #         if result['Result']:
     #             print(Fore.RED + f'{result["URL"]} is a malicious URL')
     #         else:
     #             print(Fore.GREEN + f'{result["URL"]} is not a malicious URL')
+                
+    results = utils.get_domain_newer_than_year(WHOIS_FILE, 2021)
+    print(results)

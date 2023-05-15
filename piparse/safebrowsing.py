@@ -3,6 +3,7 @@ import os
 import requests
 
 def get_safe_browsing_report(submit_url: str, sb_api_key) -> bool:
+    """Accept a single url as a string and return a boolean value"""
     #? URL for the safe browsing API
     
     if sb_api_key is None:

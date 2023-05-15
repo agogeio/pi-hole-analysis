@@ -2,7 +2,7 @@
 Include/
 Lib/
 Logs/
-piparse/__pycache__/* 
+piparse/__pycache__/
 Scripts/
 *.env
 *.cfg

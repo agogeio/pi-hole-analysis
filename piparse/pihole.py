@@ -56,48 +56,6 @@ def write_urls_to_log(url_list, log_path) -> None:
             url_file.write(url + '\n')
 
 
-def get_domain_newer_than_year(newer_than_year, whois_file) -> dict:
-    whois_data = whois_file
-    
-    try:
-        with open(whois_data, 'r', encoding='utf-8') as whois_file:
-            whois_data = json.load(whois_file)    
-    except Exception as err:
-        print(err)
-    else:
-        for domain in whois_data:
-            
-            try:
-                if not domain['domain_name']:
-                    continue
-                
-                if not domain['creation_date']:
-                    print(f">>> {domain['domain_name']} - with no creation date")
-                    continue
-                
-            except KeyError as err:
-                print(f'Key Error of: {err} for domain: {domain["domain_name"]}')
-                
-            else:
-                if type(domain['domain_name']) == list: 
-                    domain_name = domain['domain_name'][0]
-                elif type(domain['domain_name']) == str:
-                    domain_name = str(domain["domain_name"])
-            
-                if type(domain['creation_date']) == list: 
-                    creation_date = domain['creation_date'][0]
-                else:
-                    creation_date = str(domain["creation_date"])
-
-
-                creation_date_list = creation_date.split(' ')
-                creation_year_month_day = creation_date_list[0]
-                creation_year = creation_year_month_day.split('-')[0]
-              
-                if int(creation_year) > int(newer_than_year):
-                    print(f'{domain_name} - {creation_year}')
-
-
 if __name__ == '__main__':
 
     PIHOLE_FILE = 'Logs/pihole.log'
